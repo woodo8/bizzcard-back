@@ -4,8 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "build": "node build",
+    "start": "nodemon index.js",
     "swagger-autogen": "node swagger.js"
   },
   "author": "",
@@ -13,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
