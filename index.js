@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 mongoose.connect(
     process.env.CONNECTION_URL, {
