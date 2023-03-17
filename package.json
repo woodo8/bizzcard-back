@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
+    "build": "node build",
     "swagger-autogen": "node swagger.js"
   },
   "author": "",
