@@ -48,6 +48,9 @@
                 },
                 "password": {
                   "example": "any"
+                },
+                "confirm_password": {
+                  "example": "any"
                 }
               }
             }

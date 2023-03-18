@@ -15,7 +15,9 @@ export const signup = async (req, res) => {
             return res.status(400).send(error.details[0].message);
         }
 
-        const { full_name, email, password } = req.body;
+        const { full_name, email, password, confirm_password } = req.body;
+
+        console.log(confirm_password)
 
         // Check if the email is valid
         const emailIsValid = validateEmail(email);
@@ -23,6 +25,9 @@ export const signup = async (req, res) => {
             return res.status(400).send("Email is invalid")
         }
 
+        // if (password !== confirm_password) {
+        //     return res.status(400).send("Passwords do not match")
+        // }
 
         sgMail.setApiKey(process.env.SG_API_KEY);
 
@@ -44,7 +49,6 @@ export const signup = async (req, res) => {
         await user.save();
 
         // Send a verification email
-
         sendVerification(user)
 
         res.json({ message: 'User registered successfully' });
