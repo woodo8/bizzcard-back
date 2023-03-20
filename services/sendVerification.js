@@ -15,5 +15,5 @@ export const sendVerification = async (user) => {
                <a href="${process.env.URL}/user/verify-email?token=${token}">Verify email address</a>
               `
     };
-    return await sgMail.send(msg);
+    return await sgMail.send(msg).then(res => console.log(res)).catch(err=>console.log(err));
 }
