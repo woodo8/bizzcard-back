@@ -5,6 +5,7 @@ import { User, validateUser } from "../models/user.js";
 import sgMail from "@sendgrid/mail"
 import jwt from "jsonwebtoken"
 import { sendVerification } from "../services/sendVerification.js";
+import mongoose from "mongoose";
 
 export const signup = async (req, res) => {
     // #swagger.tags = ['Users']
@@ -22,14 +23,14 @@ export const signup = async (req, res) => {
         if (!emailIsValid) {
             return res.status(400).send("Email is invalid")
         }
-        
+
         sgMail.setApiKey(process.env.SG_API_KEY);
 
         // Check if user already exists
         let user = await User.findOne({ email });
 
         if (user) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).send('User already exists');
         }
 
         // Create a new user
@@ -40,14 +41,16 @@ export const signup = async (req, res) => {
         user.password = await bcrypt.hash(password, salt);
 
         // Save the user to the database
-        await user.save();
 
         // Send a verification email
-        sendVerification(user)
+        const errorSendingEmail = sendVerification(user);
 
-        res.json({ message: 'User registered successfully' });
+        // if (errorSendingEmail) {
+        //     return res.status(500).send("Internal server error!");
+        // }
+        await user.save();
+        res.status(200).json('User registered successfully');
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: err.message });
     }
 }
@@ -63,16 +66,14 @@ export const verifyEmail = async (req, res) => {
         // Find the user in the database 
         const user = await User.findById(decoded.userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).send('User not found');
         }
 
         // Check if the user is verified
         user.verified = true;
         await user.save();
-
-        res.json({ message: 'Email verified successfully' });
+        res.redirect(`${process.env.FRONT}/login_success`);
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: err.message });
     }
 }
@@ -101,12 +102,70 @@ export const signin = async (req, res) => {
             return res.status(400).json({ message: "Email is not verified" })
         }
 
-        const token = generateToken({ email: existingUser.email, id: existingUser._id }, "1h")
+        const token = generateToken({ email: existingUser.email, userId: existingUser._id }, "1h")
 
-        res.status(200).json({ result: existingUser, token })
-
+        const userInfos = {
+            id: existingUser._id,
+            full_name: existingUser.full_name,
+            email: existingUser.email,
+            subscription: existingUser.subscription,
+            verified: existingUser.verified,
+            mobile: existingUser.mobile,
+            profile_img: existingUser.profile_img
+        }
+        res.status(200).json({ result: userInfos, token })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: "Internal server error!" })
     }
 
 }
+
+export const userInfos = async (req, res) => {
+    // #swagger.tags = ['Users']
+    // const { token: token } = req.params;
+
+    try {
+        const { id: id } = req.params;
+
+        const existingUser = await User.findById(id);
+
+        if (!existingUser) {
+            return res.status(404).send('User not found');
+        }
+
+        const userInfos = {
+            id: existingUser._id,
+            full_name: existingUser.full_name,
+            email: existingUser.email,
+            subscription: existingUser.subscription,
+            verified: existingUser.verified,
+            mobile: existingUser.mobile,
+            profile_img: existingUser.profile_img
+        }
+        // Check if the user is verified
+        return res.status(200).json(userInfos);
+    } catch (err) {
+        res.status(401).send(err);
+    }
+}
+
+export const editProfile = async (req, res) => {
+    // #swagger.tags = ['Users']
+    // const { token: token } = req.params;
+
+    try {
+        const { id: id } = req.params;
+        console.log(mongoose.Types.ObjectId.isValid(id))
+
+        const userInfos = req.body
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("No user with that id")
+
+        const updatedUser = await User.findByIdAndUpdate(id, { ...userInfos, id }, { new: true })
+
+        res.status(200).json(updatedUser)
+
+    } catch (err) {
+        res.status(401).send(err);
+    }
+}
+

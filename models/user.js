@@ -30,6 +30,12 @@ const userSchema = mongoose.Schema(
         verificationToken: {
             type: String,
         },
+        profile_img: {
+            type: String,
+        },
+        mobile: {
+            type: String,
+        }
     }
 )
 
