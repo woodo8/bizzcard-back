@@ -43,11 +43,9 @@ export const signup = async (req, res) => {
         // Save the user to the database
 
         // Send a verification email
-        const errorSendingEmail = sendVerification(user);
+        // const errorSendingEmail = sendVerification(user);
 
-        // if (errorSendingEmail) {
-        //     return res.status(500).send("Internal server error!");
-        // }
+        sendVerification(user);
         await user.save();
         res.status(200).json('User registered successfully');
     } catch (err) {
