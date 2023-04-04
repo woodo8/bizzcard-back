@@ -45,9 +45,9 @@ export const signup = async (req, res) => {
         // Send a verification email
         sendVerification(user, res);
         await user.save();
-        res.status(200).json('User registered successfully');
+        return res.status(200).json('User registered successfully');
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
 
@@ -87,9 +87,9 @@ export const signin = async (req, res) => {
             mobile: existingUser.mobile,
             profile_img: existingUser.profile_img
         }
-        res.status(200).json({ result: userInfos, token })
+        return res.status(200).json({ result: userInfos, token })
     } catch (err) {
-        res.status(500).json("Internal server error!")
+        return res.status(500).json("Internal server error!")
     }
 
 }
@@ -118,9 +118,9 @@ export const forgotPassword = async (req, res) => {
         // Send a verification email
         forgotPasswordVerification(user, res);
 
-        res.status(200).json('Email to Reset password was sent to your email address');
+        return res.status(200).json('Email to Reset password was sent to your email address');
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
 
@@ -168,8 +168,8 @@ export const verifyEmail = async (req, res) => {
         // Check if the user is verified
         user.verified = true;
         await user.save();
-        res.redirect(`${process.env.FRONT}/login_success`);
+        return res.redirect(`${process.env.FRONT}/login_success`);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
