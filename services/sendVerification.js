@@ -12,12 +12,12 @@ export const sendVerification = async (user, res) => {
                   <p>Привет ${user.full_name},</p>
                   <h3>Благодарим вас за регистрацию в нашем приложении. Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой адрес электронной почты:</h3>
                   <p>эта ссылка истекает через 1 день</p>
-                   <a href="${process.env.URL}/auth/verify-email?token=${token}">
-                   
-                   <button>
-                   Подтвердить адрес электронной почты
-           </button>
-                   </a>
+                    <button>
+                    <a href="${process.env.URL}/auth/verify-email?token=${token}">
+                    
+                    Подтвердить адрес электронной почты
+                    </a>
+                    </button>
                   `
     };
 
@@ -36,11 +36,11 @@ export const forgotPasswordVerification = async (user, res) => {
                   <h4>Это нормально, такое бывает. Нажмите на кнопку ниже, чтобы сбросить пароль.</h4>
                   <h5>Предупреждение!!! Если вы не предприняли никаких действий на нашем веб-сайте по сбросу пароля, просто проигнорируйте это письмо.</h5>
                   <p>эта ссылка истекает через 1 день</p>
-                   <a href="${process.env.FRONT}/new_password/${token}">
-                    <button>
-                            Сбросить пароль
-                    </button>
-                   </a>
+                  <button>
+                    <a href="${process.env.FRONT}/new_password/${token}">
+                        Сбросить пароль
+                     </a>
+                  </button>
                   `
     };
     return await sgMail.send(msg)
