@@ -116,7 +116,7 @@ export const forgotPassword = async (req, res) => {
         }
 
         // Send a verification email
-        forgotPasswordVerification(user, res);
+        await forgotPasswordVerification(user, res);
 
         return res.status(200).json('Email to Reset password was sent to your email address');
     } catch (err) {
