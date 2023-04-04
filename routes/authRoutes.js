@@ -1,13 +1,13 @@
 import express from "express";
-import { editProfile, signin, signup, userInfos, verifyEmail } from "../controllers/authRoutes.js";
+import { forgotPassword, signin, signup, verifyEmail, resetPassword } from "../controllers/authRoutes.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/signin", signin);
-router.get("/profile/:id", auth, userInfos);
-router.patch("/edit_profile/:id", auth, editProfile);
 router.get("/verify-email", verifyEmail);
+router.post("/forgot_password", forgotPassword);
+router.patch("/reset_password", auth, resetPassword)
 
 export default router;

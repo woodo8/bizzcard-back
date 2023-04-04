@@ -10,6 +10,10 @@ const doc = {
     tags: [ 
         {
             name: 'Users', 
+            description: 'This routes are used for user actions', 
+        },
+        {
+            name: 'Auth', 
             description: 'This routes are used for authorization', 
         },
     ],

@@ -8,7 +8,6 @@ const auth = async (req, res, next) => {
         } else {
             return res.status(401).send("Token is not provided");
         }
-
         if (token) {
             let decodedData = jwt.verify(token, "bizzkey");
             req.userId = decodedData?.id;
