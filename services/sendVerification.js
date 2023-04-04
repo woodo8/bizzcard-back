@@ -13,8 +13,7 @@ export const sendVerification = async (user, res) => {
                   <h3>Благодарим вас за регистрацию в нашем приложении. Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой адрес электронной почты:</h3>
                   <p>эта ссылка истекает через 1 день</p>
                     <button>
-                    <a href="${process.env.URL}/auth/verify-email?token=${token}">
-                    
+                    <a href="https://${process.env.URL}/auth/verify-email?token=${token}">
                     Подтвердить адрес электронной почты
                     </a>
                     </button>
@@ -37,7 +36,7 @@ export const forgotPasswordVerification = async (user, res) => {
                   <h5>Предупреждение!!! Если вы не предприняли никаких действий на нашем веб-сайте по сбросу пароля, просто проигнорируйте это письмо.</h5>
                   <p>эта ссылка истекает через 1 день</p>
                   <button>
-                    <a href="${process.env.FRONT}/new_password/${token}">
+                    <a href="https://${process.env.FRONT}/new_password/${token}">
                         Сбросить пароль
                      </a>
                   </button>
