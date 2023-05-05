@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema(
             // FREE, PREMIUM
             type: String,
             default: null,
-        },
+        },  
         full_name: {
             type: String,
             required: true,
@@ -35,7 +35,8 @@ const userSchema = mongoose.Schema(
         },
         mobile: {
             type: String,
-        }
+        },
+       
     }
 )
 
@@ -44,7 +45,7 @@ const validateUser = (user) => {
     const schema = Joi.object({
         email: Joi.string().email().required(),
         full_name: Joi.string().min(3).max(30).required(),
-        password: Joi.string().min(6).required(),
+        password: Joi.string().min(8).required(),
     });
     return schema.validate(user);
 }

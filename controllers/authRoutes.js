@@ -1,11 +1,10 @@
 import bcrypt from "bcryptjs";
 import validateEmail from "../utils/validateEmail.js";
 import generateToken from "../utils/generateToken.js";
-import { User, validateUser } from "../models/user.js";
+import { User, validateUser } from "../models/userSchema.js";
 import sgMail from "@sendgrid/mail"
 import jwt from "jsonwebtoken"
 import { forgotPasswordVerification, sendVerification } from "../services/sendVerification.js";
-import mongoose from "mongoose";
 
 export const signup = async (req, res) => {
     // #swagger.tags = ['Auth']
@@ -125,6 +124,8 @@ export const forgotPassword = async (req, res) => {
 }
 
 export const resetPassword = async (req, res) => {
+    // #swagger.tags = ['Auth']
+
     const { newPassword, confirmPassword } = req.body;
 
     if (newPassword !== confirmPassword) {

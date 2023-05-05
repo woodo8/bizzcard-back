@@ -5,7 +5,9 @@ import cors from "cors";
 import dotenv from "dotenv"
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
+import cardRoutes from "./routes/cardRoutes.js"
 import swaggerUi from 'swagger-ui-express'
+
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const swaggerFile = require("./swagger_output.json");
@@ -19,12 +21,15 @@ app.use(cors());
 
 app.use("/auth", authRoutes)
 app.use("/user", userRoutes)
+app.use("/cards", cardRoutes)
 
 app.get("/", (req, res) => {
     res.send("Hello guys!!!!");
 })
 
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/uploads', express.static('uploads'));
+
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 const PORT = process.env.PORT || 8080;
 
@@ -34,9 +39,10 @@ mongoose.connect(
     useUnifiedTopology: true,
 })
     .then(() => app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`)
+        console.log(`Server is running on port ${PORT}`);
     }))
-    .catch((error) => console.log(error.message)
+    .catch((error) =>
+        console.log(error.message)
     )
 
 
