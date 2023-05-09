@@ -25,7 +25,6 @@ const bizzCardSchema = mongoose.Schema({
     },
     profile_img: {
         type: String,
-        required: true,
     },
     profile_img_shape: {
         type: String,
@@ -101,7 +100,7 @@ const validateCard = (card) => {
         name: Joi.string().required(),
         expertise: Joi.string().required(),
         description: Joi.string().required(),
-        profile_img: Joi.string().required(),
+        profile_img: Joi.string(),
         profile_img_shape: Joi.string().valid("SQUARE", "CIRCLE"),
         background_color: Joi.string().valid("MAIN", "BLUE"),
         background_img: Joi.string(),

@@ -48,7 +48,12 @@ export const getMyCards = async (req, res) => {
 
         const myCards = await BizzCard.find({ owner: id });
 
-        return res.status(200).json(myCards);
+        let newArr = [...myCards]
+        let sortedArray = newArr.sort(function (a, b) {
+            // @ts-ignore
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+        })
+        return res.status(200).json(sortedArray);
 
     } catch (error) {
         return res.status(400).send(error.message)
@@ -91,10 +96,17 @@ export const editCard = async (req, res) => {
     try {
         const { userId: userId, cardId: cardId } = req.params;
 
-        const cardinfos = req.body;
+        let cardinfos = { ...req.body };
         if (!mongoose.Types.ObjectId.isValid(cardId)) return res.status(404).send("No card with that id");
 
-        const updatedCard = await BizzCard.findOneAndUpdate({ _id: cardId, owner: userId }, { ...cardinfos, cardId }, { new: true });
+        // Add images to the database
+        if (req.files['profile_img']) {
+            cardinfos.profile_img = req.files['profile_img'][0].filename;
+        }
+        if (req.files['background_img']) {
+            cardinfos.background_img = req.files['background_img'][0].filename;
+        }
+        const updatedCard = await BizzCard.findOneAndUpdate({ _id: cardId, owner: userId }, { ...cardinfos, updatedAt: Date.now(), cardId }, { new: true });
         if (!updatedCard) {
             return res.status(404).send("Card not found");
         }
@@ -102,7 +114,6 @@ export const editCard = async (req, res) => {
     } catch (err) {
         return res.status(401).send(err.message);
     }
-
 }
 export const deleteCard = async (req, res) => {
     // #swagger.tags = ['Cards']
