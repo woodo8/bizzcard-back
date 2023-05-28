@@ -18,6 +18,9 @@ const portfolio = mongoose.Schema({
         type: String,
         required: true,
     },
+    file: {
+        type: String,
+    }
 });
 
 
@@ -29,8 +32,8 @@ const validatePortfolio = (card) => {
         url: Joi.string().uri(),
         image: Joi.any(),
         description: Joi.string(),
-        superCard: Joi.string().required,
-
+        superCard: Joi.string().required(),
+        file: Joi.any(),
     });
     return schema.validate(card);
 }
