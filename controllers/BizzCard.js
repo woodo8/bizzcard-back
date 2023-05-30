@@ -65,7 +65,12 @@ export const getAllCards = async (req, res) => {
     // #swagger.tags = ['Cards']
     try {
         const cards = await BizzCard.find({});
-        return res.status(200).json(cards);
+        let newArr = [...cards]
+        let sortedArray = newArr.sort(function (a, b) {
+            // @ts-ignore
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+        })
+        return res.status(200).json(sortedArray);
 
     } catch (error) {
         return res.status(400).send(error.message)

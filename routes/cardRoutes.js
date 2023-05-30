@@ -12,7 +12,7 @@ router.post("/create_card/:id",
         { name: 'profile_img', maxCount: 1 },
         { name: 'background_img', maxCount: 1 },
         { name: 'page_bg', maxCount: 1 },
-    ]),
+    ]), 
     createNewCard);
 
 router.get("/get_card/:id", getCard);
