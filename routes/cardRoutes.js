@@ -2,8 +2,14 @@ import express from "express";
 import { createNewCard, deleteCard, editCard, getAllCards, getCard, getMyCards } from "../controllers/BizzCard.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multerFileUpload.js";
+import dotenv from "dotenv"
 
+
+dotenv.config();
 const router = express.Router();
+
+
+
 
 // routes for bizzcard
 router.post("/create_card/:id",
@@ -12,7 +18,7 @@ router.post("/create_card/:id",
         { name: 'profile_img', maxCount: 1 },
         { name: 'background_img', maxCount: 1 },
         { name: 'page_bg', maxCount: 1 },
-    ]), 
+    ]),
     createNewCard);
 
 router.get("/get_card/:id", getCard);

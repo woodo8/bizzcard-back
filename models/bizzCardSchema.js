@@ -88,6 +88,10 @@ const bizzCardSchema = mongoose.Schema({
     },
     services: {
         type: String,
+    },
+    qualities: {
+        type: String,
+        default: null,
     }
 });
 
@@ -118,6 +122,7 @@ const validateCard = (card) => {
         timeFrom: Joi.string(),
         timeUntil: Joi.string(),
         services: Joi.string(),
+        qualities: Joi.string(),
     });
     return schema.validate(card);
 }

@@ -18,11 +18,13 @@ export const createNewCard = async (req, res) => {
 
         // Add images to the database
         if (req.files['profile_img']) {
-            newCard.profile_img = req.files['profile_img'][0].filename;
+            newCard.profile_img = req.files['profile_img'][0].path;
+            console.log(req.files['profile_img'][0])
         }
         if (req.files['background_img']) {
-            newCard.background_img = req.files['background_img'][0].filename;
+            newCard.background_img = req.files['background_img'][0].path;
         }
+
 
         // Validate errors
         const { error } = validateCard(newCard);

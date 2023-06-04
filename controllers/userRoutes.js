@@ -1,5 +1,5 @@
 
-import { User } from "../models/userSchema.js";
+import { User, validateUser } from "../models/userSchema.js";
 import mongoose from "mongoose";
 
 export const userInfos = async (req, res) => {
@@ -39,8 +39,18 @@ export const editProfile = async (req, res) => {
         const userInfos = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("No user with that id");
 
-        const updatedUser = await User.findByIdAndUpdate(id, { ...userInfos, id }, { new: true });
+        for (var key in userInfos) {
+            //@ts-ignore
+            if (!userInfos[key] || userInfos[key] == "null") {
+                delete userInfos[key];
+            }
+        }
 
+        if (req.file) {
+            userInfos.profile_img = req.file.path;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(id, { ...userInfos, id }, { new: true });
         const resUserInfos = {
             id: updatedUser._id,
             full_name: updatedUser.full_name,
@@ -53,6 +63,7 @@ export const editProfile = async (req, res) => {
 
         return res.status(200).json(resUserInfos);
     } catch (err) {
-        return res.status(401).send(err);
+        console.log(err)
+        return res.status(400).json(err);
     }
 }
