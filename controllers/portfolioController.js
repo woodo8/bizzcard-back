@@ -107,7 +107,7 @@ export const edit_portfolio = async (req, res) => {
     }
 }
 export const deletePortfolio = async (req, res) => {
-    // #swagger.tags = ['Cards']
+    // #swagger.tags = ['Portfolio']
     try {
         const { portfolioId: id } = req.params;
 
@@ -120,5 +120,4 @@ export const deletePortfolio = async (req, res) => {
     } catch (err) {
         return res.status(401).send(err.message);
     }
-
 }

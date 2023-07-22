@@ -170,6 +170,7 @@ export const verifyEmail = async (req, res) => {
         // Check if the user is verified
         user.verified = true;
         await user.save();
+        console.log(user)
         return res.redirect(`${process.env.FRONT}/login_success`);
     } catch (err) {
         return res.status(500).json({ message: err.message });

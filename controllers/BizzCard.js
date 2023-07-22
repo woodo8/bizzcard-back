@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 import { BizzCard, validateCard } from "../models/bizzCardSchema.js";
 
 export const createNewCard = async (req, res) => {
@@ -46,7 +46,6 @@ export const getMyCards = async (req, res) => {
     try {
         const { id: id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("No user with that id")
-
 
         const myCards = await BizzCard.find({ owner: id });
 
@@ -105,7 +104,7 @@ export const editCard = async (req, res) => {
 
         let cardinfos = { ...req.body };
         if (!mongoose.Types.ObjectId.isValid(cardId)) return res.status(404).send("No card with that id");
-
+        
         // Add images to the database
         if (req.files['profile_img']) {
             cardinfos.profile_img = req.files['profile_img'][0].filename;
