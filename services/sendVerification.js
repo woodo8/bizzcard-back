@@ -2,13 +2,14 @@ import sgMail from "@sendgrid/mail"
 import generateToken from "../utils/generateToken.js";
 
 export const sendVerification = async (user, res) => {
-    const token = generateToken({ userId: user._id }, "1d")
+    try {
+        const token = generateToken({ userId: user._id }, "1d")
 
-    const msg = {
-        to: user.email,
-        from: process.env.EMAIL,
-        subject: 'Подтверждение адрес электронной почты.',
-        html: `
+        const msg = {
+            to: user.email,
+            from: process.env.EMAIL,
+            subject: 'Подтверждение адрес электронной почты.',
+            html: `
                   <p>Привет ${user.full_name},</p>
                   <h3>Благодарим вас за регистрацию в нашем приложении. Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой адрес электронной почты:</h3>
                   <p>эта ссылка истекает через 1 день</p>
@@ -18,9 +19,11 @@ export const sendVerification = async (user, res) => {
                     </a>
                     </button>
                   `
-    };
-
-    return await sgMail.send(msg)
+        };
+        return await sgMail.send(msg)
+    } catch (error) {
+        console.log(error)
+    }
 }
 export const forgotPasswordVerification = async (user, res) => {
     const token = generateToken({ userId: user._id }, "1d")

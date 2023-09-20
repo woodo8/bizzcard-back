@@ -19,7 +19,6 @@ export const createNewCard = async (req, res) => {
         // Add images to the database
         if (req.files['profile_img']) {
             newCard.profile_img = req.files['profile_img'][0].path;
-            console.log(req.files['profile_img'][0])
         }
         if (req.files['background_img']) {
             newCard.background_img = req.files['background_img'][0].path;
@@ -37,6 +36,7 @@ export const createNewCard = async (req, res) => {
         await newCard.save();
         return res.status(200).json(newCard);
     } catch (error) {
+        console.log(error)
         return res.status(400).send(error.message)
     }
 }

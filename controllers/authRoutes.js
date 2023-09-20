@@ -9,6 +9,7 @@ import { forgotPasswordVerification, sendVerification } from "../services/sendVe
 export const signup = async (req, res) => {
     // #swagger.tags = ['Auth']
     try {
+        console.log("i am working")
         const { error } = validateUser(req.body);
 
         if (error) {
@@ -43,7 +44,12 @@ export const signup = async (req, res) => {
         // Save the user to the database
 
         // Send a verification email
-        sendVerification(user, res);
+        try {
+            await sendVerification(user, res);
+        } catch (sendError) {
+            console.error('Error sending verification email:', sendError);
+            return res.status(500).json({ message: 'Error sending verification email' });
+        }
         await user.save();
         return res.status(200).json('User registered successfully');
     } catch (err) {
