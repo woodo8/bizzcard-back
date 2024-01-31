@@ -1,5 +1,5 @@
 import express from "express";
-import { createNewCard, deleteCard, editCard, getAllCards, getCard, getMyCards } from "../controllers/BizzCard.js";
+import { createNewCard, deleteCard, editCard, getAllCards, getCard, getMyCards } from "../controllers/cardController.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multerFileUpload.js";
 import dotenv from "dotenv"

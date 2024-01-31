@@ -1,5 +1,5 @@
 import express from "express";
-import { editProfile, userInfos } from "../controllers/userRoutes.js";
+import { editProfile, userInfos } from "../controllers/userController.js";
 import auth from "../middleware/auth.js";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";

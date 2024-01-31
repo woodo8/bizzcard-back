@@ -9,7 +9,6 @@ import { forgotPasswordVerification, sendVerification } from "../services/sendVe
 export const signup = async (req, res) => {
     // #swagger.tags = ['Auth']
     try {
-        console.log("i am working")
         const { error } = validateUser(req.body);
 
         if (error) {
@@ -23,7 +22,6 @@ export const signup = async (req, res) => {
         if (!emailIsValid) {
             return res.status(400).send("Email is invalid")
         }
-
         sgMail.setApiKey(process.env.SG_API_KEY);
 
         // Check if user already exists
@@ -31,6 +29,8 @@ export const signup = async (req, res) => {
         if (user) {
             if (user.verified !== false) {
                 return res.status(400).send('User already exists');
+            } else {
+                User.deleteMany({ email }).exec();
             }
         }
 
@@ -47,7 +47,6 @@ export const signup = async (req, res) => {
         try {
             await sendVerification(user, res);
         } catch (sendError) {
-            console.error('Error sending verification email:', sendError);
             return res.status(500).json({ message: 'Error sending verification email' });
         }
         await user.save();
@@ -176,7 +175,6 @@ export const verifyEmail = async (req, res) => {
         // Check if the user is verified
         user.verified = true;
         await user.save();
-        console.log(user)
         return res.redirect(`${process.env.FRONT}/login_success`);
     } catch (err) {
         return res.status(500).json({ message: err.message });
