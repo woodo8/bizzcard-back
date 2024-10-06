@@ -6,8 +6,13 @@ import dotenv from "dotenv"
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import cardRoutes from "./routes/cardRoutes.js"
+import sendEmailRoutes from "./routes/sendEmailRoutes.js"
 import portfolioRoutes from "./routes/portfolioRoutes.js"
+import paymentRoutes from "./routes/paymentRoutes.js"
+
 import swaggerUi from 'swagger-ui-express'
+
+import "./cron/chargeUsersMonthly.js"
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -24,6 +29,10 @@ app.use("/auth", authRoutes)
 app.use("/user", userRoutes)
 app.use("/cards", cardRoutes)
 app.use("/portfolio", portfolioRoutes)
+app.use("/sendEmail", sendEmailRoutes)
+app.use("/payments", paymentRoutes)
+
+
 
 app.get("/", (req, res) => {
     res.send("Hello guys!!!!");

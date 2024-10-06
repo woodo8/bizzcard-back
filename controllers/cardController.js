@@ -36,7 +36,6 @@ export const createNewCard = async (req, res) => {
         await newCard.save();
         return res.status(200).json(newCard);
     } catch (error) {
-        console.log(error)
         return res.status(400).send(error.message)
     }
 }
@@ -104,7 +103,7 @@ export const editCard = async (req, res) => {
 
         let cardinfos = { ...req.body };
         if (!mongoose.Types.ObjectId.isValid(cardId)) return res.status(404).send("No card with that id");
-        
+
         // Add images to the database
         if (req.files['profile_img']) {
             cardinfos.profile_img = req.files['profile_img'][0].filename;
@@ -133,5 +132,109 @@ export const deleteCard = async (req, res) => {
     } catch (err) {
         return res.status(401).send(err.message);
     }
-
 }
+
+export const visitTrackIncrement = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const lastVisitTime = req.headers['x-last-visit-time']; // Retrieve the last visit time from the request header
+
+        if (!mongoose.Types.ObjectId.isValid(cardId)) return res.status(404).send("No card with that id");
+
+        const card = await BizzCard.findById(cardId);
+        if (!card) {
+            return res.status(404).send("Card not found");
+        }
+
+        // Determine if the visit should be counted
+        let shouldIncrement = true;
+        const currentTime = new Date().getTime();
+        if (lastVisitTime) {
+            const lastVisit = parseInt(lastVisitTime);
+            const timeDifference = (currentTime - lastVisit) / (1000 * 60 * 60); // Difference in hours
+            if (timeDifference < 1) {
+                shouldIncrement = false; // Less than one hour since the last visit
+            }
+        }
+
+        // Only increment if more than one hour has passed
+        let updatedCard;
+        if (shouldIncrement) {
+            updatedCard = await BizzCard.findOneAndUpdate(
+                { _id: cardId },
+                { $inc: { visits: 1 } }, // Increment the visits field by 1
+                { new: true }
+            );
+        } else {
+            updatedCard = card;
+        }
+
+        return res.status(200).json(updatedCard);
+    } catch (err) {
+        return res.status(401).send(err.message);
+    }
+}
+
+export const incrementShareCount = async (req, res) => {
+    const { cardId } = req.params;
+
+    try {
+        const card = await BizzCard.findById(cardId);
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        card.shares += 1;
+        await card.save();
+
+        res.status(200).json({ message: 'Share count incremented successfully', shares: card.shares });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to increment share count', error: error.message });
+    }
+};
+export const getLocation = async (req, res) => {
+    const { cardId } = req.params;
+    const { city, deviceType } = req.body;
+    if (!city) {
+        return res.status(400).send({ error: 'City name is required' });
+    }
+
+    try {
+        // Find the card document
+        const card = await BizzCard.findById(cardId);
+
+        if (!card) {
+            return res.status(404).send({ error: 'Card not found' });
+        }
+
+        // Update the city visit count
+        const cityVisits = card.cityVisits;
+        const currentCount = cityVisits.get(city) || 0;
+        cityVisits.set(city, currentCount + 1);
+
+        const expectedDeviceTypes = ['Mobile', 'Tablet', 'Desktop'];
+
+        // Filter out any unexpected keys from deviceTypes
+        const deviceTypes = new Map();
+        expectedDeviceTypes.forEach(type => {
+            const currentCount = card.deviceTypes.get(type) || 0;
+            deviceTypes.set(type, currentCount);
+        });
+
+        // Update the specific device type count from the request
+        if (expectedDeviceTypes.includes(deviceType)) {
+            const currentDeviceCount = deviceTypes.get(deviceType) || 0;
+            deviceTypes.set(deviceType, currentDeviceCount + 1);
+        }
+
+        // Replace the card's deviceTypes with the filtered deviceTypes
+        card.deviceTypes = deviceTypes;
+
+        // Save the updated card document
+        await card.save();
+
+        res.status(200).send(card);
+    } catch (error) {
+        res.status(500).send({ error: 'Internal server error' });
+    }
+};

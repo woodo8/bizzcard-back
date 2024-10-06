@@ -92,6 +92,32 @@ const bizzCardSchema = mongoose.Schema({
     qualities: {
         type: String,
         default: null,
+    },
+    template:{
+        type:String,
+        default: "v1",
+    },
+    visits:{
+        type:Number,
+        default:0,
+    },
+    shares:{
+        type:Number,
+        default:0,
+    },
+    cityVisits: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
+    deviceTypes: {
+        type: Map,
+        of: Number,
+        default: {
+            Mobile:0,
+            Tablet:0,
+            Desktop:0,
+        }
     }
 });
 
@@ -123,6 +149,9 @@ const validateCard = (card) => {
         timeUntil: Joi.string(),
         services: Joi.string(),
         qualities: Joi.string(),
+        template:Joi.string(),
+        visits:Joi.number(),
+        visits:Joi.number(),
     });
     return schema.validate(card);
 }
