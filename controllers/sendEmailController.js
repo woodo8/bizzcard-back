@@ -1,4 +1,3 @@
-import sgMail from "@sendgrid/mail"
 import { sendMessageByUsers } from "../services/sendMessageByUsers.js";
 import validateEmail from "../utils/validateEmail.js";
 export const sendEmail = async (req, res) => {
@@ -14,7 +13,7 @@ export const sendEmail = async (req, res) => {
 
 
     try {
-        console.log(req)
+        console.log(req.body)
         const { from, to } = req.body;
 
         // // Check if the email is valid
@@ -24,7 +23,6 @@ export const sendEmail = async (req, res) => {
             return res.status(400).send("One of the Emails is invalid")
         }
 
-        sgMail.setApiKey(process.env.SG_API_KEY);
 
         // // Check if user already exists
         // let user = await User.findOne({ email });
@@ -34,7 +32,7 @@ export const sendEmail = async (req, res) => {
         // }
 
         // Send a verification email
-        await sendMessageByUsers(req.body, res);
+        let response = await sendMessageByUsers(req.body, res);
 
         return res.status(200).json("Message sent succesfully");
     } catch (err) {

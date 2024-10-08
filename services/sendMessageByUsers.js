@@ -14,7 +14,7 @@ export const sendMessageByUsers = async (req, res) => {
         const msg = {
             to: req.to,
             from: process.env.EMAIL,
-            subject: `New Email from from ${req.from}`,
+            subject: `New Email from ${req.from}`,
             html: `
                   <p>Привет ${req.toName},</p>
                   <h3>You have a new message from ${req.fromName} with email ${req.from}</h3>
@@ -22,6 +22,7 @@ export const sendMessageByUsers = async (req, res) => {
                     ${req.text}</p>
                   `
         };
+        sgMail.setApiKey(process.env.SG_API_KEY);
         return await sgMail.send(msg)
     } catch (error) {
         console.log(error)
